@@ -11,5 +11,13 @@ export const getJobApplicationFile = (
 };
 
 export const formatObjectToTableMDString = (application: ResultI): string => {
-	return `|${application.status}|${application.companyName}|${application.positionName}|[URL posting](${application.jobUrl})|${application.salary}|`;
+	return `|${application.status}<br>${
+		new Date().getDate().toString() +
+		"." +
+		new Date().getMonth().toString() +
+		"." +
+		new Date().getFullYear().toString().slice(-2)
+	} |${application.companyName}|${application.positionName}|[URL posting](${
+		application.jobUrl
+	})|${application.salary}|`;
 };

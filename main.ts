@@ -31,11 +31,7 @@ export default class MyPlugin extends Plugin {
 				new Notice("This is a notice!");
 			}
 		);
-		// Perform additional things with the ribbon
 		ribbonIconEl.addClass("my-plugin-ribbon-class");
-
-		const statusBarItemEl = this.addStatusBarItem();
-		statusBarItemEl.setText("Status Bar Text");
 
 		this.addCommand({
 			id: "add-new-job",
