@@ -3,7 +3,7 @@ import { ResultI } from "./Modal";
 
 export const getJobApplicationFile = (
 	app: App,
-	settings: string,
+	settings: string
 ): TFile[] | null => {
 	return app.vault.getMarkdownFiles().filter((file) => {
 		return file.path === `${settings}.md`;

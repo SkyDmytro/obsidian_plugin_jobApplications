@@ -29,12 +29,11 @@ export default class MyPlugin extends Plugin {
 			(evt: MouseEvent) => {
 				// Called when the user clicks the icon.
 				new Notice("This is a notice!");
-			},
+			}
 		);
 		// Perform additional things with the ribbon
 		ribbonIconEl.addClass("my-plugin-ribbon-class");
 
-		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
 		const statusBarItemEl = this.addStatusBarItem();
 		statusBarItemEl.setText("Status Bar Text");
 
@@ -47,7 +46,7 @@ export default class MyPlugin extends Plugin {
 					if (jobFile?.length !== 0) {
 						this.app.vault.append(
 							jobFile[0],
-							"\n" + stringToAppend,
+							"\n" + stringToAppend
 						);
 					}
 				}).open();
@@ -62,7 +61,7 @@ export default class MyPlugin extends Plugin {
 		this.settings = Object.assign(
 			{},
 			DEFAULT_SETTINGS,
-			await this.loadData(),
+			await this.loadData()
 		);
 	}
 
@@ -92,7 +91,7 @@ class SampleSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.mySetting = value;
 						await this.plugin.saveSettings();
-					}),
+					})
 			);
 	}
 }
