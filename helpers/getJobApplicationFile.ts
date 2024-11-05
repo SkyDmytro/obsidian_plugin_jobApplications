@@ -10,14 +10,55 @@ export const getJobApplicationFile = (
 	});
 };
 
-export const formatObjectToTableMDString = (application: ResultI): string => {
-	return `|${application.status}<br>${
+export const getApplicationId = async (file: TFile, app: App) => {
+	const fileContent = await app.vault.read(file);
+	const lines = fileContent.trim().split("\n");
+	let lastLine = lines[lines.length - 1];
+	if (lastLine === "") {
+		lastLine = lines[lines.length - 2];
+	}
+	const id = lastLine.trim().split("|")[1].split("<br>")[0];
+	return (+id + 1).toString().trim();
+};
+
+export const getFullDate = () => {
+	return (
 		new Date().getDate().toString() +
 		"." +
 		new Date().getMonth().toString() +
 		"." +
 		new Date().getFullYear().toString().slice(-2)
-	} |${application.companyName}|${application.positionName}|[URL posting](${
-		application.jobUrl
-	})|${application.salary}|`;
+	);
+};
+
+export const isLastLineEmpty = async (file: TFile, app: App) => {
+	const fileContent = await app.vault.read(file);
+	const lines = fileContent.trim().split("\n");
+	const lastLine = lines[lines.length - 1];
+	const lastLineSplited = lastLine.split("|");
+	if (lastLine === "" || lastLineSplited[lastLineSplited.length - 1] === "") {
+		return true;
+	}
+	return false;
+};
+
+export const formatObjectToTableMDString = (application: ResultI): string => {
+	return `|${application.status} |${application.companyName}|${application.positionName}|[URL posting](${application.jobUrl})|${application.salary}|`;
+};
+
+export const getFinalString = async (
+	file: TFile,
+	app: App,
+	result: ResultI
+): Promise<string> => {
+	const stringToAppend = formatObjectToTableMDString(result);
+	const nextId = await getApplicationId(file, app);
+	const isLastLineEmptyFile = await isLastLineEmpty(file, app);
+	const date = getFullDate();
+	const finalString = `|${nextId}<br><br>${date}${stringToAppend}`;
+	if (isLastLineEmptyFile) {
+		return finalString;
+	} else {
+		return `\n${finalString}`;
+	}
 };

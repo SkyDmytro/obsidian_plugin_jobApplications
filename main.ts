@@ -2,7 +2,7 @@ import { App, Notice, Plugin, PluginSettingTab, Setting } from "obsidian";
 import AddJobModal, { ResultI } from "./helpers/Modal";
 import {
 	getJobApplicationFile,
-	formatObjectToTableMDString,
+	getFinalString,
 } from "./helpers/getJobApplicationFile";
 
 interface MyPluginSettings {
@@ -37,13 +37,15 @@ export default class MyPlugin extends Plugin {
 			id: "add-new-job",
 			name: "Add new job application",
 			callback: () => {
-				new AddJobModal(this.app, (result: ResultI) => {
-					const stringToAppend = formatObjectToTableMDString(result);
+				new AddJobModal(this.app, async (result: ResultI) => {
 					if (jobFile?.length !== 0) {
-						this.app.vault.append(
+						const finalString = await getFinalString(
 							jobFile[0],
-							"\n" + stringToAppend
+							this.app,
+							result
 						);
+						console.log(finalString.split("\n"));
+						this.app.vault.append(jobFile[0], finalString);
 					}
 				}).open();
 			},
