@@ -1,35 +1,37 @@
-import { Modal } from "obsidian";
-import { App, Setting } from "obsidian";
+import { Modal } from 'obsidian';
+import { App, Setting } from 'obsidian';
+import { statusToFormattedMarkDown } from './constants';
 
 export interface ResultI {
-	status: StatusI;
+	status: StatusID;
 	companyName: string;
 	positionName: string;
 	jobUrl: string;
 	salary: string;
 }
 
-type StatusI = "Answered" | "No Answer" | "Interview" | "Offer";
+type StatusI = 'Answered' | 'No Answer' | 'Interview' | 'Offer';
+type StatusID = keyof typeof statusToFormattedMarkDown;
 
 export default class JobApplicationModal extends Modal {
 	result: ResultI;
-	dropdownOptions: Record<string, StatusI>;
+	dropdownOptions: Record<StatusID, StatusI>;
 	onSubmit: (result: ResultI) => void;
 
 	constructor(app: App, onSubmit: (result: ResultI) => void) {
 		super(app);
 		this.result = {
-			status: "No Answer",
-			companyName: "",
-			positionName: "",
-			jobUrl: "",
-			salary: "",
+			status: 'NO_ANSWER',
+			companyName: '',
+			positionName: '',
+			jobUrl: '',
+			salary: '',
 		};
 		this.dropdownOptions = {
-			ANS: "Answered",
-			NOAn: "No Answer",
-			Int: "Interview",
-			Off: "Offer",
+			NO_ANSWER: 'No Answer',
+			ANSWERED: 'Answered',
+			INTERVIEW: 'Interview',
+			OFFER: 'Offer',
 		};
 		this.onSubmit = onSubmit;
 	}
@@ -37,47 +39,44 @@ export default class JobApplicationModal extends Modal {
 	onOpen() {
 		const { contentEl } = this;
 
-		contentEl.createEl("h1", { text: "Job application" });
+		contentEl.createEl('h1', { text: 'Job application' });
 
-		new Setting(contentEl).setName("Status").addDropdown((component) => {
+		new Setting(contentEl).setName('Status').addDropdown(component => {
 			return component
 				.addOptions(this.dropdownOptions)
 				.setValue(this.result.status)
-				.onChange(
-					(value) =>
-						(this.result.status = this.dropdownOptions[value]),
-				);
+				.onChange((value: StatusID) => (this.result.status = value));
 		});
 
-		new Setting(contentEl).setName("Company Name").addText((text) =>
-			text.onChange((value) => {
+		new Setting(contentEl).setName('Company Name').addText(text =>
+			text.onChange(value => {
 				this.result.companyName = value;
-			}),
+			})
 		);
 
-		new Setting(contentEl).setName("Position Name").addText((text) =>
-			text.onChange((value) => {
+		new Setting(contentEl).setName('Position Name').addText(text =>
+			text.onChange(value => {
 				this.result.positionName = value;
-			}),
+			})
 		);
-		new Setting(contentEl).setName("Url ").addText((text) =>
-			text.onChange((value) => {
+		new Setting(contentEl).setName('Url ').addText(text =>
+			text.onChange(value => {
 				this.result.jobUrl = value;
-			}),
+			})
 		);
-		new Setting(contentEl).setName("Salary").addText((text) =>
-			text.onChange((value) => {
+		new Setting(contentEl).setName('Salary').addText(text =>
+			text.onChange(value => {
 				this.result.salary = value;
-			}),
+			})
 		);
-		new Setting(contentEl).addButton((btn) =>
+		new Setting(contentEl).addButton(btn =>
 			btn
-				.setButtonText("Submit")
+				.setButtonText('Submit')
 				.setCta()
 				.onClick(() => {
 					this.close();
 					this.onSubmit(this.result);
-				}),
+				})
 		);
 	}
 }

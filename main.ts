@@ -1,16 +1,16 @@
-import { App, Notice, Plugin, PluginSettingTab, Setting } from "obsidian";
-import AddJobModal, { ResultI } from "./helpers/Modal";
+import { App, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import AddJobModal, { ResultI } from './helpers/Modal';
 import {
 	getJobApplicationFile,
 	getFinalString,
-} from "./helpers/getJobApplicationFile";
+} from './helpers/getJobApplicationFile';
 
 interface MyPluginSettings {
 	mySetting: string;
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: "default",
+	mySetting: 'default',
 };
 
 export default class MyPlugin extends Plugin {
@@ -24,18 +24,18 @@ export default class MyPlugin extends Plugin {
 		console.log(jobFile);
 		// This creates an icon in the left ribbon.
 		const ribbonIconEl = this.addRibbonIcon(
-			"dice",
-			"Sample Plugin",
+			'dice',
+			'Sample Plugin',
 			(evt: MouseEvent) => {
 				// Called when the user clicks the icon.
-				new Notice("This is a notice!");
+				new Notice('This is a notice!');
 			}
 		);
-		ribbonIconEl.addClass("my-plugin-ribbon-class");
+		ribbonIconEl.addClass('my-plugin-ribbon-class');
 
 		this.addCommand({
-			id: "add-new-job",
-			name: "Add new job application",
+			id: 'add-new-job',
+			name: 'Add new job application',
 			callback: () => {
 				new AddJobModal(this.app, async (result: ResultI) => {
 					if (jobFile?.length !== 0) {
@@ -44,7 +44,7 @@ export default class MyPlugin extends Plugin {
 							this.app,
 							result
 						);
-						console.log(finalString.split("\n"));
+						console.log(finalString.split('\n'));
 						this.app.vault.append(jobFile[0], finalString);
 					}
 				}).open();
@@ -56,11 +56,7 @@ export default class MyPlugin extends Plugin {
 	onunload() {}
 
 	async loadSettings() {
-		this.settings = Object.assign(
-			{},
-			DEFAULT_SETTINGS,
-			await this.loadData()
-		);
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
 	}
 
 	async saveSettings() {
@@ -81,12 +77,12 @@ class SampleSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		new Setting(containerEl)
-			.setName("Path to Job application file ")
-			.addText((text) =>
+			.setName('Path to Job application file ')
+			.addText(text =>
 				text
-					.setPlaceholder("Enter your path without first /")
+					.setPlaceholder('Enter your path without first /')
 					.setValue(this.plugin.settings.mySetting)
-					.onChange(async (value) => {
+					.onChange(async value => {
 						this.plugin.settings.mySetting = value;
 						await this.plugin.saveSettings();
 					})
