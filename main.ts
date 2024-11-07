@@ -44,7 +44,6 @@ export default class MyPlugin extends Plugin {
 							this.app,
 							result
 						);
-						console.log(finalString.split('\n'));
 						this.app.vault.append(jobFile[0], finalString);
 					}
 				}).open();

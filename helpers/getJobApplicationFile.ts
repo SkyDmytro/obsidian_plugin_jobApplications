@@ -48,7 +48,6 @@ export const formatObjectToTableMDString = (application: ResultI): string => {
 		statusToFormattedMarkDown[
 			application.status as keyof typeof statusToFormattedMarkDown
 		];
-	console.log(status);
 	return `|${status} |${application.companyName}|${application.positionName}|[URL](${application.jobUrl})|${application.salary}|`;
 };
 
