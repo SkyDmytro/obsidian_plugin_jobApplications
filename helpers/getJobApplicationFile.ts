@@ -23,13 +23,10 @@ export const getApplicationId = async (file: TFile, app: App) => {
 };
 
 export const getFullDate = () => {
-	return (
-		new Date().getDate().toString() +
-		'.' +
-		new Date().getMonth().toString() +
-		'.' +
-		new Date().getFullYear().toString().slice(-2)
-	);
+	const day = new Date().getDate();
+	const month = new Date().getMonth() + 1;
+	const year = new Date().getFullYear().toString().slice(-2);
+	return day + '.' + month + '.' + year;
 };
 
 export const isLastLineEmpty = async (file: TFile, app: App) => {
@@ -58,12 +55,8 @@ export const getFinalString = async (
 ): Promise<string> => {
 	const stringToAppend = formatObjectToTableMDString(result);
 	const nextId = await getApplicationId(file, app);
-	const isLastLineEmptyFile = await isLastLineEmpty(file, app);
+	// const isLastLineEmptyFile = await isLastLineEmpty(file, app);
 	const date = getFullDate();
 	const finalString = `|${nextId}<br><br>${date}${stringToAppend}`;
-	if (isLastLineEmptyFile) {
-		return finalString;
-	} else {
-		return `\n${finalString}`;
-	}
+	return `${finalString}\n`;
 };
