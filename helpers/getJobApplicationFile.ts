@@ -40,12 +40,19 @@ export const isLastLineEmpty = async (file: TFile, app: App) => {
 	return false;
 };
 
+export const getJobBoardFromUrl = (url:string)=>{
+	const domain = (new URL(url));
+	return domain.hostname.replace('www.','');
+}
+
 export const formatObjectToTableMDString = (application: ResultI): string => {
 	const status =
 		statusToFormattedMarkDown[
 			application.status as keyof typeof statusToFormattedMarkDown
 		];
-	return `|${status} |${application.companyName}|${application.positionName}|[URL](${application.jobUrl})|${application.salary}|`;
+const jobBoard = getJobBoardFromUrl(application.jobUrl)
+
+	return `|${status} |${application.companyName}|${application.positionName}|${jobBoard}|[URL](${application.jobUrl})|${application.salary}|`;
 };
 
 export const getFinalString = async (
